@@ -8,7 +8,7 @@ You would need to install [TopoJSON](https://www.npmjs.com/package/topojson) usi
 Script usage: `./generate.sh [OPTIONS]`
 
  * `-r` | `--resolution=<string>` : Map resolution (10m, 50m, 110m) [default: 110m]
- * `-a` | `--skip-antarctica` : Remove Antartica from the map [default: false]
+ * `-a` | `--skip-antarctica` : Remove Antarctica from the map [default: false]
  * `-s` | `--include-states` : Include States/Provinces lakes on the map [default: false]
  * `-l` | `--include-lakes` : Include Great lakes on the map [default: false]
  * `-p` | `--include-projection` : Embed projection into the topojson file

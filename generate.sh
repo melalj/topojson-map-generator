@@ -4,7 +4,7 @@ function usage
 {
     echo "Usage: ./generate.sh "
     echo "  * -r | --resolution=<string> : Map resolution (10m, 50m, 110m) [default: 110m]"
-    echo "  * -a | --skip-antarctica : Remove Antartica from the map [default: false]"
+    echo "  * -a | --skip-antarctica : Remove Antarctica from the map [default: false]"
     echo "  * -s | --include-states : Include States/Provinces lakes on the map [default: false]"
     echo "  * -l | --include-lakes : Include Great lakes on the map [default: false]"
     echo "  * -p | --include-projection : Embed projection into the topojson file"
@@ -21,7 +21,7 @@ function clean
 
 # OPTIONS
 RESOLUTION="110m"
-SKIP_ANTARTICA=0
+SKIP_ANTARCTICA=0
 INCLUDE_STATES=0
 INCLUDE_LAKES=0
 INCLUDE_PROJECTION=0
@@ -31,7 +31,7 @@ while [ "$1" != "" ]; do
         -r | --resolution )        shift
                                    RESOLUTION=$1
                                    ;;
-        -a | --skip-antartica )    SKIP_ANTARTICA=1
+        -a | --skip-antarctica )    SKIP_ANTARCTICA=1
                                    ;;
         -p | --include-projection )INCLUDE_PROJECTION=1
                                    ;;
@@ -86,14 +86,14 @@ if [ ! -f "$BASEMAP_DIR""/""ne_""$RESOLUTION""_""$BASEMAP"".shp" ]; then
 
 fi
 
-if [ ! -f "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antartica.shp" ]; then
+if [ ! -f "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" ]; then
 	# Thanks: https://github.com/dwtkns/gdal-cheat-sheet
-	ogr2ogr -where 'ISO_A2 != "AQ"' "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antartica.shp" \
+	ogr2ogr -where 'ISO_A2 != "AQ"' "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" \
 	 "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP"".shp"
 fi
 
-if [ "$SKIP_ANTARTICA" -eq 1 ]; then
-	SHP_TO_USE="ne_""$RESOLUTION""_""$BASEMAP""_wo_antartica"
+if [ "$SKIP_ANTARCTICA" -eq 1 ]; then
+	SHP_TO_USE="ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica"
 else
 	SHP_TO_USE="ne_""$RESOLUTION""_""$BASEMAP"
 fi

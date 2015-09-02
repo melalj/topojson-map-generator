@@ -1,0 +1,9 @@
+# world-json
+assets
+node_modules
+json
+
+# IntelliJ project files
+.idea
+
+

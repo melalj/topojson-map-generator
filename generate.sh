@@ -7,7 +7,7 @@ function usage
     echo "  * -a | --skip-antarctica : Remove Antartica from the map [default: false]"
     echo "  * -s | --include-states : Include States/Provinces lakes on the map [default: false]"
     echo "  * -l | --include-lakes : Include Great lakes on the map [default: false]"
-    echo "  * -p | --include-projection : Embed proejction into the topojson file"
+    echo "  * -p | --include-projection : Embed projection into the topojson file"
     echo "  * -c | --clean : Remove all generated maps, downloaded assets"
     echo "  * -h | --help : Showing this useful message"
 }

@@ -12,7 +12,7 @@ Script usage: `./generate.sh [OPTIONS]`
  * `-s` | `--include-states` : Include States/Provinces lakes on the map [default: false]
  * `-l` | `--include-lakes` : Include Great lakes on the map [default: false]
  * `-p` | `--include-projection` : Embed projection into the topojson file
- * `-c` | `--clean` : Remove all generated maps, downloaded assets
+ * `-c` | `--clean` : Remove all generated maps and downloaded assets
  * `-h` | `--help` : Showing this useful message
 
 ## World Maps

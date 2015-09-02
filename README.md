@@ -23,7 +23,9 @@ The dataset comes from [NatualEarth](http://www.naturalearthdata.com/downloads/)
 
 At the moment the only projection used on this script, when you add the parameter `-p`, is an equirectangular and a size 960x500:
 
-    width = 960, height = 500, d3.geo.equirectangular().rotate([-11.0, 0.0, 0.0]).scale(width /(2 * Math.PI)).translate([width / 2, height / 2])
+```javascript
+width = 960, height = 500, d3.geo.equirectangular().rotate([-11.0, 0.0, 0.0]).scale(width /(2 * Math.PI)).translate([width / 2, height / 2])
+```
 
 You can edit it on the script if you targeting another projection.
 Here's [an example](Here's an example of where it's used) of where it has been used

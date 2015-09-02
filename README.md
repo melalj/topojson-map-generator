@@ -3,8 +3,9 @@
 This script that generates TopoJSON maps with one command line.
 
 ## Usage
+You would need to install [TopoJSON](https://www.npmjs.com/package/topojson) using npm: `npm install`
 
-Usage: `./generate.sh [OPTIONS]`
+Script usage: `./generate.sh [OPTIONS]`
 
  * `-r` | `--resolution=<string>` : Map resolution (10m, 50m, 110m) [default: 110m]
  * `-a` | `--skip-antarctica` : Remove Antartica from the map [default: false]

@@ -1,7 +1,5 @@
 {
-  "name": "anonymous",
-  "version": "0.0.1",
-  "private": true,
+  "name": "topojson-map-generator",
   "dependencies": {
     "topojson": "1"
   }

@@ -1,5 +1,12 @@
 {
   "name": "topojson-map-generator",
+  "version": "1.0.1",
+  "description": "Script that generates TopoJSON maps with one script",
+  "readmeFilename": "README.md",
+  "license": "MIT",
+  "author": {
+    "name": "Mohammed Elalj"
+  },
   "repository": "https://github.com/melalj/topojson-map-generator",
   "dependencies": {
     "topojson": "1"

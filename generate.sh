@@ -66,6 +66,23 @@ fi
 
 BASEMAP_URL="http://naciscdn.org/naturalearth/""$RESOLUTION""/cultural/ne_""$RESOLUTION""_""$BASEMAP"".zip"
 
+TOPOJSON="node_modules/.bin/topojson"
+TOPOJSON_MERGE="node_modules/.bin/topojson-merge"
+
+# Check whether topojson was installed globally
+which topojson > /dev/null
+if [ "$?" -eq 0 ]; then
+	# It was
+	TOPOJSON=$(which topojson)
+fi
+
+# Do the same for topojson-merge
+which topojson-merge > /dev/null
+if [ "$?" -eq 0 ]; then
+	TOPOJSON_MERGE=$(which topojson-merge)
+fi
+
+
 BASEMAP_DIR="assets/""$BASEMAP"
 JSON_DIR="maps"
 mkdir -p "$BASEMAP_DIR"
@@ -114,8 +131,8 @@ else
 fi
 
 # Thanks Mike Bostock: https://gist.github.com/mbostock/c1c0426d50ca8a9f4c97
-TOPOJSON_CMD="node_modules/.bin/topojson --quantization 1e5 ""$TOPOJSON_PARAMS"" --id-property=iso_a2 -p iso_a2 "\
+TOPOJSON_CMD="$TOPOJSON --quantization 1e5 ""$TOPOJSON_PARAMS"" --id-property=iso_a2 -p iso_a2 "\
 "-p iso_a3 -p continent -p name -- countries=\"""$BASEMAP_DIR""/""$SHP_TO_USE"".shp\" sphere=assets/sphere.json "\
-"| node_modules/.bin/topojson-merge --io countries --oo land -o \"""$JSON_DIR""/""$SHP_TO_USE""$OUTPUT_SUFFIX"".json\""
+"| $TOPOJSON_MERGE --io countries --oo land -o \"""$JSON_DIR""/""$SHP_TO_USE""$OUTPUT_SUFFIX"".json\""
 
 eval "$TOPOJSON_CMD"

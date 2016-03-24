@@ -9,6 +9,6 @@
   },
   "repository": "https://github.com/melalj/topojson-map-generator",
   "dependencies": {
-    "topojson": "1"
+    "topojson": "^1.6.24"
   }
 }

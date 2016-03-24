@@ -67,7 +67,7 @@ fi
 BASEMAP_URL="http://naciscdn.org/naturalearth/""$RESOLUTION""/cultural/ne_""$RESOLUTION""_""$BASEMAP"".zip"
 
 BASEMAP_DIR="assets/""$BASEMAP"
-JSON_DIR=json
+JSON_DIR="maps"
 mkdir -p "$BASEMAP_DIR"
 mkdir -p "$JSON_DIR"
 
@@ -87,9 +87,14 @@ if [ ! -f "$BASEMAP_DIR""/""ne_""$RESOLUTION""_""$BASEMAP"".shp" ]; then
 fi
 
 if [ ! -f "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" ]; then
-	# Thanks: https://github.com/dwtkns/gdal-cheat-sheet
-	ogr2ogr -where 'ISO_A2 != "AQ"' "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" \
-	 "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP"".shp"
+  if which ogr2ogr >/dev/null; then
+    # Thanks: https://github.com/dwtkns/gdal-cheat-sheet
+    ogr2ogr -where 'ISO_A2 != "AQ"' "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" \
+  	 "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP"".shp"
+  else
+    echo "ogr2ogr not found. Please install GDAL before executing this command. (brew install gdal)"
+    exit
+  fi
 fi
 
 if [ "$SKIP_ANTARCTICA" -eq 1 ]; then

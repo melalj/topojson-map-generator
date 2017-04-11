@@ -17,7 +17,7 @@ Script usage: `./generate.sh [OPTIONS]`
 
 ## World Maps
 
-The dataset comes from [NatualEarth](http://www.naturalearthdata.com/downloads/)
+The dataset comes from [NaturalEarth](http://www.naturalearthdata.com/downloads/)
 
 ## Projection
 

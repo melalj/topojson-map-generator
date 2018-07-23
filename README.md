@@ -2,9 +2,11 @@
 
 This script that generates TopoJSON maps with one command line.
 
-## Usage
-You would need to install [TopoJSON](https://www.npmjs.com/package/topojson) using npm: `npm install`
+## Prerequisites
+ - Node 8 with NPM
+ - [GDAL](https://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries)
 
+## Usage
 Script usage: `./generate.sh [OPTIONS]`
 
  * `-r` | `--resolution=<string>` : Map resolution (10m, 50m, 110m) [default: 110m]
@@ -15,9 +17,23 @@ Script usage: `./generate.sh [OPTIONS]`
  * `-c` | `--clean` : Remove all generated maps and downloaded assets
  * `-h` | `--help` : Showing this useful message
 
+## Example
+
+```sh
+# Generate a topojson file at a 50m resolution, skipping antartica and including lakes
+./generate.sh -r 50m -a -l
+```
+
 ## World Maps
 
 The dataset comes from [NaturalEarth](http://www.naturalearthdata.com/downloads/)
+
+## Preserved properties
+
+ - NAME
+ - CONTINENT
+ - ISO_A2
+ - ISO_A3
 
 ## Projection
 

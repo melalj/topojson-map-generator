@@ -1,5 +1,4 @@
 #!/bin/bash
-
 function usage
 {
     echo "Usage: ./generate.sh "
@@ -66,28 +65,15 @@ fi
 
 BASEMAP_URL="http://naciscdn.org/naturalearth/""$RESOLUTION""/cultural/ne_""$RESOLUTION""_""$BASEMAP"".zip"
 
-TOPOJSON="node_modules/.bin/topojson"
-TOPOJSON_MERGE="node_modules/.bin/topojson-merge"
-
-# Check whether topojson was installed globally
-which topojson > /dev/null
-if [ "$?" -eq 0 ]; then
-	# It was
-	TOPOJSON=$(which topojson)
-fi
-
-# Do the same for topojson-merge
-which topojson-merge > /dev/null
-if [ "$?" -eq 0 ]; then
-	TOPOJSON_MERGE=$(which topojson-merge)
-fi
-
-
 BASEMAP_DIR="assets/""$BASEMAP"
 JSON_DIR="maps"
 mkdir -p "$BASEMAP_DIR"
 mkdir -p "$JSON_DIR"
 
+if [ ! -d "./node_modules" ]; then
+		echo "Installing npm packages"
+        npm install
+fi
 
 if [ ! -f assets/sphere.json ]; then
 	echo '{"type": "Sphere"}' > assets/sphere.json
@@ -100,16 +86,15 @@ if [ ! -f "$BASEMAP_DIR""/""ne_""$RESOLUTION""_""$BASEMAP"".shp" ]; then
 	rm -rf "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP.zip"
 	rm -rf "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP.README.html"
 	rm -rf "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP.VERSION.txt"
-
 fi
 
 if [ ! -f "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" ]; then
   if which ogr2ogr >/dev/null; then
     # Thanks: https://github.com/dwtkns/gdal-cheat-sheet
-    ogr2ogr -where 'ISO_A2 != "AQ"' "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" \
+    ogr2ogr -where "ISO_A2 != 'AQ'" -lco "ENCODING=UTF-8" "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" \
   	 "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP"".shp"
   else
-    echo "ogr2ogr not found. Please install GDAL before executing this command. (brew install gdal)"
+    echo "ogr2ogr not found. Please install GDAL before executing this command.\nhttps://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries"
     exit
   fi
 fi
@@ -131,8 +116,7 @@ else
 fi
 
 # Thanks Mike Bostock: https://gist.github.com/mbostock/c1c0426d50ca8a9f4c97
-TOPOJSON_CMD="$TOPOJSON --quantization 1e5 ""$TOPOJSON_PARAMS"" --id-property=iso_a2 -p iso_a2 "\
-"-p iso_a3 -p continent -p name -- countries=\"""$BASEMAP_DIR""/""$SHP_TO_USE"".shp\" sphere=assets/sphere.json "\
-"| $TOPOJSON_MERGE --io countries --oo land -o \"""$JSON_DIR""/""$SHP_TO_USE""$OUTPUT_SUFFIX"".json\""
+./node_modules/.bin/topojson --quantization 1e5 $TOPOJSON_PARAMS --id-property=ISO_A2 -p ISO_A2 -p ISO_A3 -p CONTINENT -p NAME -- countries="$BASEMAP_DIR/$SHP_TO_USE.shp" sphere=assets/sphere.json > assets/tmp.json
+./node_modules/.bin/topojson-merge --io countries --oo land -o "$JSON_DIR/$SHP_TO_USE$OUTPUT_SUFFIX.json" -- assets/tmp.json
+rm -rf assets/tmp.json
 
-eval "$TOPOJSON_CMD"

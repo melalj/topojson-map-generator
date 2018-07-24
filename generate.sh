@@ -116,7 +116,7 @@ else
 fi
 
 # Thanks Mike Bostock: https://gist.github.com/mbostock/c1c0426d50ca8a9f4c97
-./node_modules/.bin/topojson --quantization 1e5 $TOPOJSON_PARAMS --id-property=ISO_A2 -p ISO_A2 -p ISO_A3 -p CONTINENT -p NAME -- countries="$BASEMAP_DIR/$SHP_TO_USE.shp" sphere=assets/sphere.json > assets/tmp.json
+./node_modules/.bin/topojson --quantization 1e5 $TOPOJSON_PARAMS --id-property=ISO_A2 -p iso_a2=ISO_A2,iso_a3=ISO_A3,continent=CONTINENT,name=NAME -- countries="$BASEMAP_DIR/$SHP_TO_USE.shp" sphere=assets/sphere.json > assets/tmp.json
 ./node_modules/.bin/topojson-merge --io countries --oo land -o "$JSON_DIR/$SHP_TO_USE$OUTPUT_SUFFIX.json" -- assets/tmp.json
 rm -rf assets/tmp.json
 

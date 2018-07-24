@@ -88,21 +88,24 @@ if [ ! -f "$BASEMAP_DIR""/""ne_""$RESOLUTION""_""$BASEMAP"".shp" ]; then
 	rm -rf "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP.VERSION.txt"
 fi
 
-if [ ! -f "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" ]; then
-  if which ogr2ogr >/dev/null; then
-    # Thanks: https://github.com/dwtkns/gdal-cheat-sheet
-    ogr2ogr -where "ISO_A2 != 'AQ'" -lco "ENCODING=UTF-8" "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" \
-  	 "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP"".shp"
-  else
+# REMOVE UNOFFICIAL LANDS
+if which ogr2ogr >/dev/null; then
+    ogr2ogr -where "ISO_A2 != '-99'"  -lco "ENCODING=UTF-8" "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_clean.shp" \
+        "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP"".shp"
+else
     echo "ogr2ogr not found. Please install GDAL before executing this command.\nhttps://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries"
     exit
-  fi
+fi
+
+if [ ! -f "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" ]; then
+    ogr2ogr -where "ISO_A2 != 'AQ'"  -lco "ENCODING=UTF-8" "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" \
+  	 "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_clean.shp"
 fi
 
 if [ "$SKIP_ANTARCTICA" -eq 1 ]; then
 	SHP_TO_USE="ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica"
 else
-	SHP_TO_USE="ne_""$RESOLUTION""_""$BASEMAP"
+	SHP_TO_USE="ne_""$RESOLUTION""_""$BASEMAP""_clean"
 fi
 
 if [ "$INCLUDE_PROJECTION" -eq 1 ]; then

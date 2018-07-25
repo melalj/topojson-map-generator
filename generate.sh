@@ -90,8 +90,7 @@ fi
 
 # REMOVE UNOFFICIAL LANDS
 if which ogr2ogr >/dev/null; then
-    ogr2ogr -where "ISO_A2 != '-99'"  -lco "ENCODING=UTF-8" "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_clean.shp" \
-        "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP"".shp"
+    echo "GDAL detected"
 else
     echo "ogr2ogr not found. Please install GDAL before executing this command.\nhttps://trac.osgeo.org/gdal/wiki/DownloadingGdalBinaries"
     exit
@@ -99,13 +98,13 @@ fi
 
 if [ ! -f "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" ]; then
     ogr2ogr -where "ISO_A2 != 'AQ'"  -lco "ENCODING=UTF-8" "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica.shp" \
-  	 "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP""_clean.shp"
+  	 "$BASEMAP_DIR""/ne_""$RESOLUTION""_""$BASEMAP"".shp"
 fi
 
 if [ "$SKIP_ANTARCTICA" -eq 1 ]; then
 	SHP_TO_USE="ne_""$RESOLUTION""_""$BASEMAP""_wo_antarctica"
 else
-	SHP_TO_USE="ne_""$RESOLUTION""_""$BASEMAP""_clean"
+	SHP_TO_USE="ne_""$RESOLUTION""_""$BASEMAP"
 fi
 
 if [ "$INCLUDE_PROJECTION" -eq 1 ]; then
@@ -118,8 +117,9 @@ else
     OUTPUT_SUFFIX=""
 fi
 
-# Thanks Mike Bostock: https://gist.github.com/mbostock/c1c0426d50ca8a9f4c97
-./node_modules/.bin/topojson --quantization 1e5 $TOPOJSON_PARAMS --id-property=ISO_A2 -p iso_a2=ISO_A2,iso_a3=ISO_A3,continent=CONTINENT,name=NAME -- countries="$BASEMAP_DIR/$SHP_TO_USE.shp" sphere=assets/sphere.json > assets/tmp.json
-./node_modules/.bin/topojson-merge --io countries --oo land -o "$JSON_DIR/$SHP_TO_USE$OUTPUT_SUFFIX.json" -- assets/tmp.json
-rm -rf assets/tmp.json
+# Thanks https://gist.github.com/mbostock/c1c0426d50ca8a9f4c97
+# Thanks https://github.com/markmarkoh/datamaps/issues/76
+./node_modules/.bin/topojson --filter=none --id-property=ADM0_A3_IS -p adm0_a3=ADM0_A3_IS,iso_a2=ISO_A2,iso_a3=ISO_A3,continent=CONTINENT,name=NAME -o tmp.json countries="$BASEMAP_DIR/$SHP_TO_USE.shp"
+cat tmp.json | ./node_modules/.bin/topojson-merge --io=countries --oo=countries -o "$JSON_DIR/$SHP_TO_USE$OUTPUT_SUFFIX"".json" -k "d.id"
+rm -rf tmp.json
 
